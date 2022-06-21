@@ -1,0 +1,167 @@
+import string
+
+action = int(input ("Si desea descifrar un mensaje ingrese el número 0, si por el contrario desea cifrar ingrese el número 1  \n"))
+key = input ("\nIngrese la clave \n")
+
+#Configuración de la llave
+keyUpper = key.upper().replace(" ", "")
+key = list(keyUpper)
+alph = list(string.ascii_uppercase)
+key = key + alph
+key = dict.fromkeys(key)
+key = list(key.keys())
+
+#Eliminacion de caracter I o J
+j = key.index('J')
+i = key.index('I')
+di = 0
+dj = 0
+if i<j:
+  key.pop(j)
+  dj = 1
+else:
+  key.pop(i)
+  di = 1
+
+x = 5
+finalKey= lambda key, x: [key[i:i+x] for i in range(0, len(key), x)]
+finalKey=finalKey(key, x)
+
+
+def index(word):
+  for i_i in range(5):
+    idex = 8
+    try:
+      idex = finalKey[i].index(word)
+    except:
+      idex = 8
+    if idex != 8 :
+      return i, finalKey[i].index(word)
+
+def prettyMatrix():
+  for fila in finalKey:
+          for valor in fila:
+              print("\t", valor, end=" ")
+          print()
+
+pText= ""
+#Decidir acción
+c=0
+d=0
+if action == 0:
+  cText = input ("\nIngrese el texto a descrifrar \n")
+  d = 1
+if action == 1:
+  pText = input ("\nIngrese el texto a cifrar \n")
+  c = 1
+
+#Configuracion del texto a cifrar
+pText = pText.upper().replace(" ", "")
+
+def pTextFinal(pText):
+  x = 2
+  testpText= lambda pText, x: [pText[i:i+x] for i in range(0, len(pText), x)]
+  testpText=testpText(pText, x)
+  for i in range(len(testpText)):
+    j = dict.fromkeys(testpText[i])
+
+    if len (j) == 1:
+      pText=list(pText)
+      pText.insert(i*2+1, 'X')
+      testpText= pTextFinal(pText)
+  return testpText
+
+# Algoritmo de cifrado
+def cypher(pt1, pt2):
+  *******if di == 1 and pt1 == 'I':
+    pt1 = 'J'
+  if di == 1 and pt2 == 'I':
+    pt2 = 'J'
+  if dj == 1 and pt1 == 'J':
+    pt1 = 'I'
+  if dj == 1 and pt2 == 'J':
+    pt2 = 'I'
+
+  idPt1 = index(pt1)
+  idPt2 = index(pt2)
+  if idPt1[1]==idPt2[1]:
+    xt1 = idPt1[0]+1
+    xt2 = idPt2[0]+1
+    if idPt1[0]==4:
+      xt1 =0
+    if idPt2[0]==4:
+      xt2 = 0
+    return finalKey[xt1][idPt1[1]], finalKey[xt2][idPt1[1]]
+
+  if idPt1[0]==idPt2[0]:
+    yt1 = idPt1[1]+1
+    yt2 = idPt2[1]+1
+    if idPt1[1]==4:
+      yt1 =0
+    if idPt2[1]==4:
+      yt2 = 0
+    return finalKey[idPt1[0]][yt1], finalKey[idPt1[0]][yt2]
+  else:
+    return finalKey[idPt1[0]][idPt2[1]], finalKey[idPt2[0]][idPt1[1]]
+
+if c==1 :
+  finalpText = pTextFinal(pText)
+  cifredText = ""
+  for i in range(len(finalpText)):
+    cifredText = cifredText + cypher(finalpText[i][0],finalpText[i][1])[0] + cypher(finalpText[i][0],finalpText[i][1])[1]+ "  "
+
+  print("\nLa llave matriz es: " )
+  prettyMatrix()
+  print(" \nEl mensaje cifrado es: " + cifredText)
+
+
+#Configuracion del texto a descifrar
+
+cText = cText.upper().replace(" ", "")
+x = 2
+testcText= lambda cText, x: [cText[i:i+x] for i in range(0, len(cText), x)]
+testcText=testcText(cText, x)
+
+
+# Algoritmo de descifrado
+def decypher(pt1, pt2):
+
+  if di == 1 and pt1 == 'I':
+    pt1 = 'J'
+  if di == 1 and pt2 == 'I':
+    pt2 = 'J'
+  if dj == 1 and pt1 == 'J':
+    pt1 = 'I'
+  if dj == 1 and pt2 == 'J':
+    pt2 = 'I'
+
+  idPt1 = index(pt1)
+  idPt2 = index(pt2)
+  if idPt1[1]==idPt2[1]:
+    xt1 = idPt1[0]-1
+    xt2 = idPt2[0]-1
+    if idPt1[0]==0:
+      xt1 = 4
+    if idPt2[0]==0:
+      xt2 = 4
+    return finalKey[xt1][idPt1[1]], finalKey[xt2][idPt1[1]]
+
+  if idPt1[0]==idPt2[0]:
+    yt1 = idPt1[1]-1
+    yt2 = idPt2[1]-1
+    if idPt1[1]==0:
+      yt1 = 4
+    if idPt2[1]==0:
+      yt2 = 4
+    return finalKey[idPt1[0]][yt1], finalKey[idPt1[0]][yt2]
+  else:
+    return finalKey[idPt1[0]][idPt2[1]], finalKey[idPt2[0]][idPt1[1]]
+
+if d==1 :
+  decifredText = ""
+  for i in range(len(testcText)):
+    decifredText = decifredText + decypher(testcText[i][0],testcText[i][1])[0] + decypher(testcText[i][0],testcText[i][1])[1]+ "  "
+
+  print("\nLa llave matriz es: " )
+  prettyMatrix()
+  print("\nSu mensaje es: " + decifredText)

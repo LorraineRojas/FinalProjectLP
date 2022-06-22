@@ -3,18 +3,19 @@ import org.antlr.v4.runtime.tree.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.Scanner;
 
-public class Trainer {
+public class Main {
 
     static String name ;
     static ArrayList<Double> stats = new ArrayList<>();
     static HashMap<String, ArrayList<Double>> users = new HashMap<>();
-    static MyVisitor mv = new MyVisitor();
+    static Scanner mv = new Scanner();
 
 
     public void InPut(){
 
-        System.out.println("Analizador de estilo para el lenguaje Python 3");
+        System.out.println("Escaner de estilo para el lenguaje Python 3");
         Scanner sc = new Scanner(System.in);
         System.out.print("Nombre del usuario: ");
         name = sc.nextLine();
@@ -91,17 +92,6 @@ public class Trainer {
         float perAllcaps = (float) mv.all_caps_count/total;
         float perSmallcaps = (float) mv.small_caps_count/total;
 
-        if(print){
-            System.out.println("Numero de Lineas: "+mv.numlines);
-            System.out.println("Snake Case: "+String.format("%.2f", perSnake*100)+"%");
-            System.out.println("Upper Camel Case: "+String.format("%.2f", perUcamel*100)+"%");
-            System.out.println("Lower Camel Case: "+String.format("%.2f",perLcamel*100)+"%");
-            System.out.println("All Caps: "+String.format("%.2f",perAllcaps*100)+"%");
-            System.out.println("Small Caps: "+String.format("%.2f",perSmallcaps*100)+"%");
-        }
-
-
-
         double perSnakeF = (double) Math.round(perSnake * 100d) / 100d;
         stats.add(perSnakeF);
         double perUcamelF = (double) Math.round(perUcamel * 100d) / 100d;
@@ -113,21 +103,31 @@ public class Trainer {
         double perSmallcapsF = (double) Math.round(perSmallcaps * 100d) / 100d;
         stats.add(perSmallcapsF);
 
-
-
-
         // Cantidades
         if(print){
-            System.out.println();
-            System.out.println("Cantidad de Sentencias if: "+mv.if_cont);
-            System.out.println("Cantidad de ciclos While: "+mv.while_cont);
-            System.out.println("Cantidad de ciclos For: "+mv.for_cont);
-            System.out.println("Programacion Funcional: "+mv.lambda_exist+" cantidad: "+mv.lambda_cont);
-            System.out.println("Palabras en Espanol: "+mv.spanish_words_cont);
-            System.out.println("Abreviaciones: "+mv.abreviations_words_cont);
-            System.out.println("Palabras Desconocidas: "+mv.other_words_cont);
-            System.out.println("Palabras Incompletas: "+mv.uncomplete_words_cont);
-            System.out.println("Palabras en Ingles: "+mv.english_words_cont);
+            System.out.println("Numero de Lineas del codigo: "+mv.numlines);
+            System.out.println("Palabras en espanol: "+mv.spanish_words_cont);
+            System.out.println("Palabras en ingles: "+mv.english_words_cont);
+            System.out.println("Abreviaciones de palabras: "+mv.abreviations_words_cont);
+            System.out.println("Numero de condicionales If: "+mv.if_cont);
+            System.out.println("Numero de ciclos While: "+mv.while_cont);
+            System.out.println("Numero de ciclos For: "+mv.for_cont);
+            System.out.println("Funciones Lambda: "+mv.lambda_exist+" Numero de funciones Lambda: "+mv.lambda_cont);
+        }
+
+
+
+        if(print){
+            //System.out.println("Numero de cadenas en mayuscula: "+mv.all_caps_count);
+            System.out.println("Porcentaje de cadenas en mayuscula: "+String.format("%.2f",perAllcaps*100)+"%");
+            //System.out.println("Numero de cadenas en minuscula: "+mv.small_caps_count);
+            System.out.println("Porcentaje de cadenas en minuscula: "+String.format("%.2f",perSmallcaps*100)+"%");
+            //System.out.println("Numero de cadenas con barra_al_piso: "+mv.snake_case_cont);
+            System.out.println("Porcentaje de cadenas con barra_al_piso: "+String.format("%.2f", perSnake*100)+"%");
+            //System.out.println("Numero de funciones del tipo 'FuncionCamelCase: "+mv.Ucamel_case_cont);
+            System.out.println("Porcentaje de funciones del tipo 'FuncionCamelCase': "+String.format("%.2f", perUcamel*100)+"%");
+            //System.out.println("Numero de funciones del tipo 'funcionCamelCase': "+mv.Lcamel_case_cont);
+            System.out.println("Porcentaje de funciones del tipo 'funcionCamelCase': "+String.format("%.2f",perLcamel*100)+"%");
         }
 
         stats.add((double)mv.if_cont);
@@ -187,11 +187,11 @@ public class Trainer {
 
         double ans = (double) Math.round(max/8 * 100d) / 100d;
         if(ans>0){
-            System.out.println("El usuario: "+name);
+            System.out.println("La entrada del usuario: "+name);
             System.out.println("Tiene una similitud del: "+ans*100 +" %");
-            System.out.println("Con el usuario: "+targetUser);
+            System.out.println("Con la entrada del usuario: "+targetUser);
         }else
-            System.out.println("No hay similitud con ningun usuario");
+            System.out.println("No existe similitud de" +name+ "con otro usuario");
 
 
     }
@@ -263,7 +263,7 @@ public class Trainer {
     */
     public static void main(String[] args) throws IOException {
 
-        Trainer t = new Trainer();
+        Main t = new Main();
 
         // Recopila la informacion de los demas usuarios
         //t.otherUsers();
@@ -275,7 +275,7 @@ public class Trainer {
         CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
         Python3Parser parser = new Python3Parser(tokens);
         ParseTree tree = parser.file_input();
-        MyVisitor<Object> loader = new MyVisitor<Object>();
+        Scanner<Object> loader = new Scanner<Object>();
         loader.visit(tree);
 
         // Resultados del Analisis Estilografico

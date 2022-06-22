@@ -1,17 +1,11 @@
-import org.antlr.v4.runtime.misc.ObjectEqualityComparator;
-import org.stringtemplate.v4.ST;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.sql.SQLOutput;
 import java.util.HashMap;
 
-// Analisis Estilografico realizado para el codigo de Python 3
+// Escaner de estilo realizado para el codigo de Python 3
 // realizado por Lorraine Rojas y Brian Barreto
 
-public class MyVisitor<T> extends Python3BaseVisitor<T> {
-
-    //Variables para las bases de datos de las palabras
+public class Scanner<T> extends Python3BaseVisitor<T> {
+    //Bases de datos de las palabras
     private HashMap<String, Integer> db_abreviations = new HashMap<>();
     private HashMap<String, Integer> db_spanish = new HashMap<>();
     private HashMap<String, Integer> db_english = new HashMap<>();
@@ -25,7 +19,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
     static int abreviations_words_cont;
     static int other_words_cont;
     static int complete_words_cont;
-    static int uncomplete_words_cont;
     static int Ucamel_case_cont;
     static int Lcamel_case_cont;
     static int all_caps_count;
@@ -44,21 +37,16 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
     static boolean lambda_exist;
     // Funcion que se utiliza para leer las palabras de la base de datos
     // Las palabras son guardadas en un Diccionario
-
     private void readDb( String path, HashMap<String, Integer> db ){
         File file = new File( path );
         FileReader fileR;
         BufferedReader file2 = null;
-
         try {
             fileR = new FileReader(file);
             file2 = new BufferedReader(fileR);
-
-
         } catch (FileNotFoundException e) {
             System.out.println("No se encontro el archivo "+file.getName());
         }
-
         try {
             String lines;
             while( ( lines = file2.readLine()) != null ) {
@@ -77,46 +65,29 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
         try {
             file = new FileWriter(path, true);
             PrintWriter filePw = new PrintWriter(file);
-
             filePw.write( word +"\n" );
-
-
             file.close();
         } catch (IOException e){
             System.out.println("No se encontro el archivo "+file.getEncoding());
         }
     }
 
-    //Función que analizara las palabras de los nombres agregando a las variables
+    //Funcion que analizara las palabras de los nombres agregando a las variables
     private void wordAnalysis( String word ){
 
         //System.out.println("WORD in analysis: "+word);
         if( db_abreviations.containsKey( word ) ){
             abreviations_words_cont += 1;
-            uncomplete_words_cont += 1;
-
         }else if( db_english.containsKey( word ) ){
             english_words_cont += 1;
             complete_words_cont += 1;
-
         } else if( db_spanish.containsKey( word ) ){
             spanish_words_cont += 1;
             complete_words_cont += 1;
-
         } else if( db_other_words.containsKey( word ) ){
             other_words_cont += 1;
             complete_words_cont += 1;
-
-        } else if( db_posible_words.containsKey( word ) ){
-            //System.out.println("else if: "+word);
-            other_words_cont += 1;
-            uncomplete_words_cont += 1;
-            //lookPosibleToOther( word );
-
-        } else {
-            //System.out.println("else: "+word);
-            other_words_cont += 1;
-            uncomplete_words_cont += 1;
+        }else {
             addToPosible( word );
         }
     }
@@ -125,13 +96,9 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
         db_posible_words.put( word, 1 );
         writeDb( "db/posible_words_db", word );
-        //wordAnalysis( word );
-
     }
 
     private void StyleAnalysis( String word){
-
-
         if(word == null){
             StyleAnalysis("blank");
         }else{
@@ -141,17 +108,14 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
                 if(words.length > 1){
                     for (int i = 0; i < words.length ; i++)
                         wordAnalysis(words[0].toLowerCase());
-
                 }else
                     wordAnalysis(word.toLowerCase());
-
             }
             else if(word.matches("[A-Z].*[a-z].*") ){
                 //System.out.println("UCamelCase");
                 Ucamel_case_cont++;
                 int aux = 0;
                 for (int i = 1; i < word.length() ; i++) {
-
                     String letter = String.valueOf(word.charAt(i)) ;
                     if(letter.matches("[A-Z].*")){
                         //System.out.println(word.substring(aux,i));
@@ -159,43 +123,29 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
                         aux = i;
                     }else if(i == word.length()-1)
                         wordAnalysis(word.substring(aux,i+1).toLowerCase());
-
                 }
-
             }else if(word.matches("[a-z].*[A-Z].*")){
-                //System.out.println("LCamelCase");
                 Lcamel_case_cont++;
                 int aux = 0;
                 for (int i = 1; i < word.length() ; i++) {
-
                     String letter = String.valueOf(word.charAt(i)) ;
                     if(letter.matches("[A-Z].*")){
-                        //System.out.println(word.substring(aux,i).toLowerCase());
                         wordAnalysis(word.substring(aux,i).toLowerCase());
                         aux = i;
                     }else if(i == word.length()-1){
-                        //System.out.println(word.substring(aux,i+1).toLowerCase());
                         wordAnalysis(word.substring(aux,i+1).toLowerCase());
                     }
-
-
                 }
-
             }else if(word.matches("[A-Z].*")){
-                //System.out.println("All_caps");
                 all_caps_count++;
                 wordAnalysis(word);
 
             }else if(word.matches("[a-z].*")){
-                //System.out.println("Small_caps");
                 small_caps_count++;
                 wordAnalysis(word.toLowerCase());
-
             };
         }
-
     }
-
 
     //Función donde se inicializara las variables para el analisis del codigo.
     //Se inicializaran todas las variables que requieran un valor por defecto cuando se introduzca un codigo nuevo
@@ -204,19 +154,13 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
         english_words_cont = 0;
         spanish_words_cont = 0;
         abreviations_words_cont = 0;
-        other_words_cont = 0;
         complete_words_cont = 0;
-        uncomplete_words_cont = 0;
-
         Ucamel_case_cont = 0;
         Lcamel_case_cont = 0;
         all_caps_count = 0;
         small_caps_count = 0;
         snake_case_cont = 0;
-
         if_cont = 0;
-        //switch_cont = 0;
-
         for_cont = 0;
         while_cont = 0;
         lambda_cont = 0;
@@ -231,16 +175,13 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
     @Override
     public T visitSingle_input(Python3Parser.Single_inputContext ctx) {
-        //System.out.println("Single_input");
         return visitChildren(ctx);
     }
 
     @Override
     public T visitFile_input(Python3Parser.File_inputContext ctx) {
-        //System.out.println("File_input");
         numlines = ctx.stmt().size();
         initializeVariables();
-
         return visitChildren(ctx);
     }
 
@@ -267,7 +208,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
     @Override
     public T visitFuncdef(Python3Parser.FuncdefContext ctx) {
-        //System.out.println("Funcdef");
         String name = ctx.NAME().getText();
         if (ctx.suite().isEmpty() == false)
             numlines +=  ctx.suite().stmt().size();
@@ -280,10 +220,7 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
             // Analisis a los parametros de las funciones
             StyleAnalysis(parametros[i]);
         }
-
-
         return null;
-
     }
 
     @Override
@@ -330,18 +267,10 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
         return visitChildren(ctx);
     }
 
-
-
     @Override public T visitExpr_stmt(Python3Parser.Expr_stmtContext ctx) {
-        //System.out.println("Expr_stmt: ");
-        //System.out.println("ctx: "+ctx.testlist_star_expr(0).getText());
         String variable = (String)visitTestlist_star_expr(ctx.testlist_star_expr(0));
         // Se analiza el estilo de la variable
-
-        //System.out.println("variable: "+variable);
         StyleAnalysis(variable);
-
-
         return null;
     }
     /**
@@ -358,8 +287,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public T visitTestlist_star_expr(Python3Parser.Testlist_star_exprContext ctx) {
-        //System.out.println("Testlist_star_expr");
-
         return visitChildren(ctx);
     }
     /**
@@ -733,10 +660,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public T visitAtom_expr(Python3Parser.Atom_exprContext ctx) {
-        //System.out.println("Atom Expr ");
-        /*//System.out.println("Atom: "+visitAtom(ctx.atom()));
-        System.out.println("casdfsdagf: "+ctx.trailer(0).getText());
-        System.out.println("trailer; "+visitTrailer(ctx.trailer(0)));*/
         return visitChildren(ctx);
 
     }
@@ -747,19 +670,12 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override public T visitAtom(Python3Parser.AtomContext ctx) {
-        //System.out.println("Atom");
         if(ctx.NAME()!=null){
-            //System.out.println("ID");
-            //ident = "ID";
             return (T)ctx.NAME().getText();
         }else if(ctx.NUMBER()!=null){
-            //System.out.println("NUMBER");
-            //ident = "NUMBER";
             return (T)ctx.NUMBER().getText();
         }
         else if(ctx.STRING()!=null && ctx.STRING().size() > 0){
-
-            //ident = "STRING";
             return (T)ctx.STRING(0).getText();
         }else if(ctx.FALSE()!=null){
             return (T)ctx.FALSE().getText();
@@ -794,21 +710,11 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
             else{
                 for (int i = 0; i < ctx.arglist().argument().size() ; i++)
                     return visitArgument(ctx.arglist().argument().get(i)) ;
-
             }
-
         }else{
             for (int i = 0; i < ctx.subscriptlist().subscript().size() ; i++)
                 return visitSubscript(ctx.subscriptlist().subscript().get(i)) ;
         }
-        //System.out.println("Trailer");
-        //System.out.println("ctx: "+ctx.getText());
-        /*for (int i = 0; i < ctx.arglist().argument().size() ; i++) {
-            //System.out.println("los argumentos: "+ctx.arglist().argument().get(i).getText());
-            return visitArgument(ctx.arglist().argument().get(i)) ;
-            //StyleAnalysis(ctx.arglist().argument().get(i).getText());
-        }*/
-        //return visitChildren(ctx);
         return null;
     }
     /**
@@ -861,7 +767,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
      */
     @Override
     public T visitClassdef(Python3Parser.ClassdefContext ctx) {
-        //System.out.println("Classdef");
         String Name = ctx.NAME().getText();
         StyleAnalysis(Name);
         return visitChildren(ctx);

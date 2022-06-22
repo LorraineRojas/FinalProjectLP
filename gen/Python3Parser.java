@@ -1,4 +1,4 @@
-// Generated from C:/Users/milol/IdeaProjects/FinalProjectLP/grammar\Python3.g4 by ANTLR 4.10.1
+// Generated from C:/Users/cardo/IdeaProjects/FinalProjectLP/grammar\Python3.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

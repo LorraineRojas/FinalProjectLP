@@ -44,6 +44,7 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
     static boolean lambda_exist;
     // Funcion que se utiliza para leer las palabras de la base de datos
     // Las palabras son guardadas en un Diccionario
+
     private void readDb( String path, HashMap<String, Integer> db ){
         File file = new File( path );
         FileReader fileR;
@@ -197,7 +198,7 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
 
     //Función donde se inicializara las variables para el analisis del codigo.
-    //Se inicializaran todas las variables que requieran un valor por defecto cuando se introdusca un codigo nuevo
+    //Se inicializaran todas las variables que requieran un valor por defecto cuando se introduzca un codigo nuevo
     private void initializeVariables(){
 
         english_words_cont = 0;
@@ -534,6 +535,7 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
      */
     @Override public T visitWhile_stmt(Python3Parser.While_stmtContext ctx) {
         while_cont++;
+        numlines += ctx.suite(0).stmt().size();
         return visitChildren(ctx);
     }
     /**

@@ -4,7 +4,7 @@ import java.util.HashMap;
 // Escaner de estilo realizado para el codigo de Python 3
 // realizado por Lorraine Rojas y Brian Barreto
 
-public class Scanner<T> extends Python3BaseVisitor<T> {
+public class MyVisitor<T> extends Python3BaseVisitor<T> {
     //Bases de datos de las palabras
     private HashMap<String, Integer> db_abreviations = new HashMap<>();
     private HashMap<String, Integer> db_spanish = new HashMap<>();

@@ -5,12 +5,12 @@ import java.io.*;
 import java.util.*;
 import java.util.Scanner;
 
-public class Main {
+public class Trainer{
 
     static String name ;
     static ArrayList<Double> stats = new ArrayList<>();
     static HashMap<String, ArrayList<Double>> users = new HashMap<>();
-    static Scanner mv = new Scanner();
+    static MyVisitor mv = new MyVisitor<>();
 
 
     public void InPut(){
@@ -263,7 +263,7 @@ public class Main {
     */
     public static void main(String[] args) throws IOException {
 
-        Main t = new Main();
+        Trainer t = new Trainer();
 
         // Recopila la informacion de los demas usuarios
         //t.otherUsers();
@@ -275,7 +275,7 @@ public class Main {
         CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
         Python3Parser parser = new Python3Parser(tokens);
         ParseTree tree = parser.file_input();
-        Scanner<Object> loader = new Scanner<Object>();
+        MyVisitor<Object> loader = new MyVisitor<Object>();
         loader.visit(tree);
 
         // Resultados del Analisis Estilografico

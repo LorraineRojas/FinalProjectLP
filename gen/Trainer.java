@@ -92,7 +92,7 @@ public class Trainer {
         float perSmallcaps = (float) mv.small_caps_count/total;
 
         if(print){
-            System.out.println("Número de Lineas: "+mv.numlines);
+            System.out.println("Numero de Lineas: "+mv.numlines);
             System.out.println("Snake Case: "+String.format("%.2f", perSnake*100)+"%");
             System.out.println("Upper Camel Case: "+String.format("%.2f", perUcamel*100)+"%");
             System.out.println("Lower Camel Case: "+String.format("%.2f",perLcamel*100)+"%");
@@ -123,7 +123,7 @@ public class Trainer {
             System.out.println("Cantidad de ciclos While: "+mv.while_cont);
             System.out.println("Cantidad de ciclos For: "+mv.for_cont);
             System.out.println("Programacion Funcional: "+mv.lambda_exist+" cantidad: "+mv.lambda_cont);
-            System.out.println("Palabras en Español: "+mv.spanish_words_cont);
+            System.out.println("Palabras en Espanol: "+mv.spanish_words_cont);
             System.out.println("Abreviaciones: "+mv.abreviations_words_cont);
             System.out.println("Palabras Desconocidas: "+mv.other_words_cont);
             System.out.println("Palabras Incompletas: "+mv.uncomplete_words_cont);
@@ -205,7 +205,7 @@ public class Trainer {
             Calstats(true);
 
     }
-
+    /*
     public void otherUsers() throws IOException{
 
         //
@@ -244,7 +244,7 @@ public class Trainer {
 
 
 
-            Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName("codes/code"+(i+1)+".txt"));
+            //Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName("codes/code"+(i+1)+".txt"));
             CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();
@@ -260,12 +260,13 @@ public class Trainer {
 
 
     }
+    */
     public static void main(String[] args) throws IOException {
 
         Trainer t = new Trainer();
 
         // Recopila la informacion de los demas usuarios
-        t.otherUsers();
+        //t.otherUsers();
 
         // Informacion del usuario
         t.InPut();
@@ -277,12 +278,7 @@ public class Trainer {
         MyVisitor<Object> loader = new MyVisitor<Object>();
         loader.visit(tree);
 
-
         // Resultados del Analisis Estilografico
         t.OutPut();
-        System.out.println();
-        System.out.println("Codigos tomados de Google CodeJam 2017");
-        System.out.println("https://www.go-hero.net/jam/17/solutions/0/3/Python");
-
     }
 }

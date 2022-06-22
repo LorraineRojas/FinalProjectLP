@@ -112,13 +112,11 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
                     wordAnalysis(word.toLowerCase());
             }
             else if(word.matches("[A-Z].*[a-z].*") ){
-                //System.out.println("UCamelCase");
                 Ucamel_case_cont++;
                 int aux = 0;
                 for (int i = 1; i < word.length() ; i++) {
                     String letter = String.valueOf(word.charAt(i)) ;
                     if(letter.matches("[A-Z].*")){
-                        //System.out.println(word.substring(aux,i));
                         wordAnalysis(word.substring(aux,i).toLowerCase());
                         aux = i;
                     }else if(i == word.length()-1)
@@ -240,8 +238,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
     @Override
     public T visitVarargslist(Python3Parser.VarargslistContext ctx) {
-        //System.out.println("Vararglist");
-        //System.out.println("lo que sea: "+ctx.vfpdef().size());
         return visitChildren(ctx);
     }
 
@@ -263,7 +259,6 @@ public class MyVisitor<T> extends Python3BaseVisitor<T> {
 
     @Override
     public T visitSmall_stmt(Python3Parser.Small_stmtContext ctx) {
-        //System.out.println("Small_stmt");
         return visitChildren(ctx);
     }
 
